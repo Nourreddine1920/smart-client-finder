@@ -6,3 +6,4 @@ fake-useragent
 selenium
 python-dotenv
 playwright
+soup4

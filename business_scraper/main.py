@@ -5,17 +5,17 @@ from scrapers.yellowpages_scraper import scrape_yellowpages
 from utils.csv_exporter import save_to_csv
 
 # Fake data just for testing
-dummy_data = [
-    {"name": "Test Company", "website": "https://example.com", "phone": "+123456", "location": "Dubai", "source": "TestSource"}
-]
+# dummy_data = [
+#     {"name": "Test Company", "website": "https://example.com", "phone": "+123456", "location": "Dubai", "source": "TestSource"}
+# ]
 
-save_to_csv(dummy_data)
+# save_to_csv(dummy_data)
 
 
 # Let's run the yellow pages scraper and save the results to a CSV file
 
-keywords = ["dentist", "marketing agency"]
-cities = ["New York", "Los Angeles"]
+keywords = ["Electric Companies", "marketing agency"]
+cities = ["New York", "Los Angeles, CA"]
 
 all_data = []
 
