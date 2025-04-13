@@ -13,40 +13,39 @@ def extract_email_from_website(page, website_url):
         print(f"[!] Failed to get email from {website_url}: {str(e)}")
         return None
 
-def scrape_yellowpages(keyword, city, max_pages=1):
+def scrape_kompass(keyword, location, max_pages=1):
     results = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)  # Try headless=False to debug
+        browser = p.chromium.launch(headless=False)  # Set headless=False for debugging
         page = browser.new_page()
 
         for page_num in range(1, max_pages + 1):
-            search_url = f"https://www.yellowpages.com/search?search_terms={keyword.replace(' ', '+')}&geo_location_terms={city.replace(' ', '+')}&page={page_num}"
+            search_url = f"https://www.kompass.com/searchCompanies?searchType=COMPANYNAME&text={keyword.replace(' ', '+')}&location={location.replace(' ', '+')}&pageNumber={page_num}"
             print(f"Fetching: {search_url}")
 
             try:
                 page.goto(search_url, timeout=20000)
-                page.wait_for_selector("div.result", timeout=10000)
+                page.wait_for_selector(".company-card", timeout=10000)
                 html = page.content()
                 soup = BeautifulSoup(html, "html.parser")
-                listings = soup.select("div.result")
+                listings = soup.select(".company-card")
 
                 if not listings:
                     print(f"[!] No listings found on page: {search_url}")
                     continue
 
                 for listing in listings:
-                    name_tag = listing.select_one(".business-name span")
-                    website_tag = listing.select_one(".links a[href^='http']")
-                    phone_tag = listing.select_one(".phones")
-                    location_tag = listing.select_one(".adr")
-                    # description_tag = listing.select_one(".result-text")  # Assuming the description is in a tag like this
+                    name_tag = listing.select_one(".company-name a")
+                    website_tag = listing.select_one(".website a")
+                    phone_tag = listing.select_one(".phone")
+                    location_tag = listing.select_one(".address")
+                    # Add other tags as needed for additional fields
 
                     name = name_tag.text.strip() if name_tag else ""
                     website = website_tag["href"] if website_tag else ""
                     phone = phone_tag.text.strip() if phone_tag else ""
                     location = location_tag.text.strip() if location_tag else ""
-                    # description = description_tag.text.strip() if description_tag else ""  # Extract description
 
                     email = extract_email_from_website(page, website) if website else None
 
@@ -56,8 +55,7 @@ def scrape_yellowpages(keyword, city, max_pages=1):
                         "email": email,
                         "phone": phone,
                         "location": location,
-                        # "description": description,  # Add description to the result
-                        "source": "YellowPages"
+                        "source": "Kompass"
                     })
 
             except Exception as e:

@@ -7,3 +7,4 @@ selenium
 python-dotenv
 playwright
 soup4
+os
