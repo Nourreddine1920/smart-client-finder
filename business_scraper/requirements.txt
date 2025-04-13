@@ -1,0 +1,8 @@
+requests
+beautifulsoup4
+lxml
+pandas
+fake-useragent
+selenium
+python-dotenv
+playwright
