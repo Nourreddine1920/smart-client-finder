@@ -8,3 +8,4 @@ python-dotenv
 playwright
 soup4
 os
+selenium
